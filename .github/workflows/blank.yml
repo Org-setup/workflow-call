@@ -4,6 +4,6 @@ on:
   workflow_dispatch:
 jobs:
   call-workflow-passing-data:
-    uses: Org-setup/angular-cide/.github/workflows/main.yml@master
+    uses: Org-setup/angular-cicd/.github/workflows/main.yml@master
     secrets: inherit
       
