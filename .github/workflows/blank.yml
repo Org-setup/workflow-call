@@ -1,0 +1,9 @@
+name: main
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  call-workflow-passing-data:
+    uses: GKprojects/url-shortener-angular/.github/workflows/ggshield.yml@master
+    secrets: inherit
+      
