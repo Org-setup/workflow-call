@@ -4,6 +4,6 @@ on:
   workflow_dispatch:
 jobs:
   call-workflow-passing-data:
-    uses: GKprojects/url-shortener-angular/.github/workflows/ggshield.yml@master
+    uses: Org-setup/angular-cide/.github/workflows/main.yml@master
     secrets: inherit
       
