@@ -1,9 +1,40 @@
 name: main
 on:
-  push:
+  pull_request:
+      types: [ opened, reopened, edited, synchronize ]
+      branches:
+        - 'main'
   workflow_dispatch:
+
 jobs:
-  call-workflow-passing-data:
-    uses: Org-setup/angular-cicd/.github/workflows/main.yaml@master
-    secrets: inherit
-      
+  build:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+        
+    - name: Check for changes in restricted files
+      id: diff
+      run: |
+        # Fetch latest changes from the remote origin main branch
+        restricted_files="file1.txt config/secrets.yml docs/private-doc.md"
+        
+        if [ $GITHUB_BASE_REF ]; then
+        # Pull Request
+        git fetch origin ${{ github.base_ref }} ${{ github.event.pull_request.head.ref }} --depth=1
+        export DIFF=$( git diff --name-only origin/$GITHUB_BASE_REF $GITHUB_SHA )
+        echo "Files been changed"
+        echo $DIFF
+        
+        for file in $restricted_files; do
+            if echo "$DIFF" | grep "$file"; then
+                echo "$file has been modified."
+                exit 1
+            fi
+        done
+        else
+          exit 0
+        fi
